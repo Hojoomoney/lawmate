@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="site.lawmate.manage.repository.ManageMapper">
+    <select id="selectCountUsers" resultType="Long">
+        SELECT count(*) FROM users
+    </select>
+    <select id="selectCountMale" resultType="Long">
+        SELECT count(*) FROM users where gender = '남자'
+    </select>
+    <select id="selectCountFemale" resultType="Long">
+        SELECT count(*) FROM users where gender = '여자'
+    </select>
+    <select id="selectUserCountByAgeGroup" resultType="map">
+        SELECT
+            CASE
+                WHEN age &lt; 20 THEN '20대 미만'
+                WHEN age BETWEEN 20 AND 29 THEN '20대'
+                WHEN age BETWEEN 30 AND 39 THEN '30대'
+                WHEN age BETWEEN 40 AND 49 THEN '40대'
+                WHEN age BETWEEN 50 AND 59 THEN '50대'
+                ELSE '60대 이상'
+                END as ageGroup,
+            COUNT(*) as count
+        FROM users
+        GROUP BY ageGroup
+    </select>
+    <select id="selectYesterdayNewUserCount" parameterType="map" resultType="Long">
+        SELECT COUNT(*)
+        FROM users
+        WHERE reg_date &gt;= #{yesterdayStart}
+          AND reg_date &lt; #{todayStart}
+    </select>
+</mapper>
