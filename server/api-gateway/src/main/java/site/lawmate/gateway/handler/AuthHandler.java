@@ -123,5 +123,4 @@ public class AuthHandler {
                 .httpOnly(true)
                 .build();
     }
-
 }

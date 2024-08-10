@@ -26,6 +26,28 @@ public class S3ServiceImpl implements S3Service {
     private final AmazonS3 s3Client;
     private final String bucketName;
 
+
+    @Override
+    public Mono<String> uploadToS3(FilePart filePart) { // 단일 파일용
+        String key = UUID.randomUUID().toString() + "_" + filePart.filename();
+        return DataBufferUtils.join(filePart.content())
+                .flatMap(dataBuffer -> {
+                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
+                    dataBuffer.read(bytes);
+                    DataBufferUtils.release(dataBuffer);
+
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setContentLength(bytes.length);
+                    metadata.setContentType(filePart.headers().getContentType().toString());
+
+                    PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, new ByteArrayInputStream(bytes), metadata)
+                            .withCannedAcl(CannedAccessControlList.PublicRead);
+
+                    s3Client.putObject(putObjectRequest);
+                    return Mono.just(s3Client.getUrl(bucketName, key).toString());
+                });
+    }
+
     @Override
     public Mono<String> uploadFile(FilePart filePart) {
         return filePart.content().reduce(DataBuffer::write)

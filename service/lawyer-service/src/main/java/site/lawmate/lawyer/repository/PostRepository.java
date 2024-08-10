@@ -10,4 +10,5 @@ import site.lawmate.lawyer.domain.model.Post;
 public interface PostRepository extends ReactiveMongoRepository<Post, String> {
     Flux<Post> findAllByLawyerId(String lawyerId);
     Flux<Post> findAllBy(PageRequest pageRequest);
+
 }

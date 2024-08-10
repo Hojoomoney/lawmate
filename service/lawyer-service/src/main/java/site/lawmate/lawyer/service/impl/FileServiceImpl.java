@@ -1,6 +1,7 @@
 package site.lawmate.lawyer.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,31 +29,16 @@ public class FileServiceImpl implements FileService {
     private final FileRepository fileRepository;
     private final LawyerRepository lawyerRepository;
     private final AmazonS3 s3Client;
+    private final S3ServiceImpl s3ServiceImpl;
     private final String bucketName = "bucket-lawmate-lawyer";
 
     @Override
     public Flux<File> saveFiles(String lawyerId, Flux<FilePart> files) {
         return lawyerRepository.findById(lawyerId)
-                .flatMapMany(lawyer -> files.flatMap(filePart -> uploadToS3(filePart)
+                .flatMapMany(lawyer -> files.flatMap(filePart -> s3ServiceImpl.uploadFile(filePart)
                         .flatMap(url -> saveFileMetadata(lawyerId, filePart, url))));
     }
-    @Override
-    public Mono<String> uploadToS3(FilePart filePart) {
-        String key = UUID.randomUUID().toString() + "_" + filePart.filename();
-        return DataBufferUtils.join(filePart.content())
-                .flatMap(dataBuffer -> {
-                    byte[] bytes = new byte[dataBuffer.readableByteCount()];
-                    dataBuffer.read(bytes);
-                    DataBufferUtils.release(dataBuffer);
 
-                    ObjectMetadata metadata = new ObjectMetadata();
-                    metadata.setContentLength(bytes.length);
-                    metadata.setContentType(filePart.headers().getContentType().toString());
-
-                    s3Client.putObject(new PutObjectRequest(bucketName, key, new ByteArrayInputStream(bytes), metadata));
-                    return Mono.just(s3Client.getUrl(bucketName, key).toString());
-                });
-    }
     @Override
     public Mono<File> saveFileMetadata(String lawyerId, FilePart filePart, String url) {
         File fileModel = new File();

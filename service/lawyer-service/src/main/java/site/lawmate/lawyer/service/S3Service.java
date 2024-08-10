@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface S3Service {
+    Mono<String> uploadToS3(FilePart filePart);
     Mono<String> uploadFile(FilePart filePart);
     Flux<String> uploadFiles(Flux<FilePart> fileParts);
 

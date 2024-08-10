@@ -13,11 +13,9 @@ public interface PostService {
     Flux<File> saveFilesForPost(String lawyerId, Flux<FilePart> files, String postId);
     Flux<Post> getPostsByLawyerId(String lawyerId);
     Mono<Post> updatePost(String postId, Post updatedPost, Flux<FilePart> fileParts);
-    Flux<Post> getAllPosts(PageRequest pageRequest);
     Mono<Void> deletePost(String id);
     Mono<Void> deleteAllPosts();
     Mono<Void> deleteFileByUrl(String url);
     Mono<byte[]> downloadFile(String url);
-
-
+    Flux<Post> getAllPosts(PageRequest pageRequest);
 }

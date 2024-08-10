@@ -96,6 +96,8 @@ public class PostServiceImpl implements PostService {
                                     }));
                 });
     }
+
+
     @Override
     public Flux<Post> getAllPosts(PageRequest pageRequest) {
         return postRepository.findAllBy(pageRequest);

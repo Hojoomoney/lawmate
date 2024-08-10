@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.component.Messenger;
-import site.lawmate.lawyer.domain.dto.LawyerDto;
 import site.lawmate.lawyer.domain.model.LawyerDetail;
 import site.lawmate.lawyer.domain.model.Lawyer;
-import site.lawmate.lawyer.service.ConvertService;
 import site.lawmate.lawyer.service.impl.LawyerServiceImpl;
 
 import java.util.List;
@@ -84,17 +82,6 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerService.deleteLawyer(id));
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Mono<Lawyer>> getLawyerByEmail(@PathVariable("email") String email) {
-        return ResponseEntity.ok(lawyerService.getLawyerByEmail(email));
-    }
-
-    @GetMapping("/detail/email/{email}")
-    public ResponseEntity<Mono<LawyerDetail>> getLawyerDetailByEmail(@PathVariable("email") String email) {
-        return ResponseEntity.ok(lawyerService.getLawyerDetailByEmail(email));
-    }
-
-
     // 담당 법률로 변호사 찾기
     // 형사법 공법 국제법 국제거래법 노동법 조세법 지적재산권법 민사법 경제법 환경법
     @GetMapping("/law")
@@ -113,6 +100,4 @@ public class LawyerController {
     public ResponseEntity<Mono<Void>> resetPassword(@RequestParam String lawyerNo) {
         return ResponseEntity.ok(lawyerService.resetPassword(lawyerNo));
     }
-
-
 }

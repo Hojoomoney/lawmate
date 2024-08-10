@@ -39,6 +39,7 @@ public class ReplyServiceImpl implements ReplyService {
     public Mono<Reply> getReplyByArticleId(String articleId) {
         return replyRepository.findByArticleId(articleId);
     }
+
     @Override
     public Flux<Reply> getAllReplies() {
         return replyRepository.findAll();

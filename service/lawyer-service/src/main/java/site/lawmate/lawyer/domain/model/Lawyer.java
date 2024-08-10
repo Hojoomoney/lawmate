@@ -26,9 +26,10 @@ public class Lawyer implements Persistable<String> {
     String name;
     String phone;
     String birth;
-    String lawyerNo;
-    String mid;
-    Boolean auth;
+    String lawyerNo; // 8자리 랜덤숫자
+    String mid; // default값 imp78717406
+    @Builder.Default
+    Boolean auth = false;
 
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

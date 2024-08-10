@@ -23,11 +23,6 @@ import site.lawmate.lawyer.service.impl.ReplyServiceImpl;
 public class ReplyController {
     private final ReplyServiceImpl service;
 
-    @GetMapping("/article/{articleId}")
-    public ResponseEntity<Mono<Reply>> findReplyByArticleId(@PathVariable("articleId") String articleId) {
-        return ResponseEntity.ok(service.getReplyByArticleId(articleId));
-    }
-
     @PostMapping("/save/{id}")
     public ResponseEntity<Mono<Lawyer>> createReply(@PathVariable("id") String lawyerId,
                                                          @RequestParam String articleId,
@@ -59,4 +54,10 @@ public class ReplyController {
     public ResponseEntity<Mono<Void>> deleteAllReplies() {
         return ResponseEntity.ok(service.deleteAllReplies());
     }
+
+    @GetMapping("/article/{articleId}")
+    public ResponseEntity<Mono<Reply>> findReplyByArticleId(@PathVariable("articleId") String articleId) {
+        return ResponseEntity.ok(service.getReplyByArticleId(articleId));
+    }
+
 }

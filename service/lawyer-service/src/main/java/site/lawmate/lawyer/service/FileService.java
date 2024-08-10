@@ -8,7 +8,7 @@ import site.lawmate.lawyer.domain.model.File;
 public interface FileService {
 
     Flux<File> saveFiles(String lawyerId, Flux<FilePart> files);
-    Mono<String> uploadToS3(FilePart filePart);
+
     Mono<File> saveFileMetadata(String lawyerId, FilePart filePart, String url);
     Mono<File> getFileById(String id);
     Mono<Void> deleteFileById(String id);

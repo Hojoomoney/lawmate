@@ -8,6 +8,8 @@ import site.lawmate.lawyer.domain.model.Reply;
 
 @Repository
 public interface ReplyRepository extends ReactiveMongoRepository<Reply, String>{
-    Mono<Reply> findByArticleId(String articleId);
+
     Flux<Reply> findAllByLawyerId(String lawyerId);
+
+    Mono<Reply> findByArticleId(String articleId);
 }
