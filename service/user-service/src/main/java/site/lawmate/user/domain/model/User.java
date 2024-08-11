@@ -1,5 +1,6 @@
 package site.lawmate.user.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Component;
 import site.lawmate.user.domain.vo.Registration;
 import site.lawmate.user.domain.vo.Role;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -60,10 +63,13 @@ public class User extends BaseEntity {
     }
 
     @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Question> questions;
 
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<UserPayment> payments;
+
+    @OneToMany(mappedBy = "buyer", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<UserPayment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Issue> issues;

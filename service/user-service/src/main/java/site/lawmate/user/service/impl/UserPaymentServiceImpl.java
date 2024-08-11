@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -182,24 +183,46 @@ public class UserPaymentServiceImpl implements UserPaymentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserPaymentDto> findById(Long id) {
-        return payRepository.findById(id).map(this::entityToDto);
+        return payRepository.findById(id)
+                .map(pay -> {
+                    pay.getBuyer().getQuestions().size();
+                    pay.getBuyer().getIssues().size();
+                    pay.getProduct().getPayments().size();
+
+                    return entityToDto(pay);
+                });
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserPaymentDto> findByLawyer(String lawyer) {
         return payRepository.findByLawyer(lawyer)
-                .map(this::entityToDto);
+                .map(pay -> {
+                    pay.getBuyer().getQuestions().size();
+                    pay.getBuyer().getIssues().size();
+                    pay.getProduct().getPayments().size();
+
+                    return entityToDto(pay);
+                });
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserPaymentDto> findByBuyerId(Long buyerId) {
-        return payRepository.findByBuyerId(buyerId)
-                .stream()
-                .map(this::entityToDto)
+        List<UserPayment> payments = payRepository.findByBuyerId(buyerId);
+
+        return payments.stream()
+                .map(pay -> {
+                    pay.getBuyer().getQuestions().size();
+                    pay.getBuyer().getIssues().size();
+                    pay.getProduct().getPayments().size();
+                    return entityToDto(pay);
+                })
                 .toList();
     }
+
 
     @Override
     public Messenger count() {
