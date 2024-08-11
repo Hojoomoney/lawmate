@@ -133,4 +133,9 @@ public class PostServiceImpl implements PostService {
             return s3Object.getObjectContent().readAllBytes();
         });
     }
+
+    @Override
+    public Mono<Post> getPostById(String postId) {
+        return postRepository.findById(postId);
+    }
 }
