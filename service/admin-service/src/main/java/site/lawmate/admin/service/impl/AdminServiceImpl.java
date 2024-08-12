@@ -30,6 +30,7 @@ public class AdminServiceImpl implements AdminService {
                             .password(adminDto.getPassword())
                             .name(adminDto.getName())
                             .role(adminDto.getRole())
+                            .enabled(adminDto.getEnabled())
                             .build();
                     return adminRepository.save(admin);
                 }));
