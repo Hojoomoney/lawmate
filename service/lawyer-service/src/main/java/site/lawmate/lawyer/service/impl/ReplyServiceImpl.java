@@ -34,17 +34,14 @@ public class ReplyServiceImpl implements ReplyService {
                     return replyRepository.save(reply);
                 });
     }
-
     @Override
-    public Mono<Reply> getReplyByArticleId(String articleId) {
-        return replyRepository.findByArticleId(articleId);
+    public Flux<Reply> getRepliesByArticleId(String articleId) {
+        return replyRepository.findAllByArticleId(articleId);
     }
-
     @Override
     public Flux<Reply> getAllReplies() {
         return replyRepository.findAll();
     }
-
     @Override
     public Mono<Void> deleteReply(String id) {
         return replyRepository.deleteById(id);
@@ -56,6 +53,10 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Mono<Void> deleteAllReplies() {
         return replyRepository.deleteAll();
+    }
+    @Override
+    public Mono<Reply> getReplyById(String id) {
+        return replyRepository.findById(id);
     }
 }
 

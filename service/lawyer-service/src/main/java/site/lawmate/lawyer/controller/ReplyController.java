@@ -56,8 +56,12 @@ public class ReplyController {
     }
 
     @GetMapping("/article/{articleId}")
-    public ResponseEntity<Mono<Reply>> findReplyByArticleId(@PathVariable("articleId") String articleId) {
-        return ResponseEntity.ok(service.getReplyByArticleId(articleId));
+    public ResponseEntity<Flux<Reply>> findReplyByArticleId(@PathVariable("articleId") String articleId) {
+        return ResponseEntity.ok(service.getRepliesByArticleId(articleId));
     }
 
+    @GetMapping("/reply/{id}")
+    public ResponseEntity<Mono<Reply>> getReplyById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(service.getReplyById(id));
+    }
 }

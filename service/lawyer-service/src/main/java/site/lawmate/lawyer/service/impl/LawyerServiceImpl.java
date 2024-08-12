@@ -1,5 +1,5 @@
     package site.lawmate.lawyer.service.impl;
-    
+
     import lombok.RequiredArgsConstructor;
     import lombok.extern.slf4j.Slf4j;
     import org.springframework.data.domain.Sort;
@@ -9,14 +9,12 @@
     import org.springframework.stereotype.Service;
     import reactor.core.publisher.Flux;
     import reactor.core.publisher.Mono;
-    import site.lawmate.lawyer.component.Messenger;
-    import site.lawmate.lawyer.domain.dto.LawyerDto;
-    import site.lawmate.lawyer.domain.model.LawyerDetail;
     import site.lawmate.lawyer.domain.model.Lawyer;
+    import site.lawmate.lawyer.domain.model.LawyerDetail;
     import site.lawmate.lawyer.repository.LawyerDetailRepository;
     import site.lawmate.lawyer.repository.LawyerRepository;
     import site.lawmate.lawyer.service.LawyerService;
-    
+
     import java.util.List;
     import java.util.UUID;
     
@@ -115,7 +113,7 @@
     
             return reactiveMongoTemplate.find(query, Lawyer.class);
         }
-    
+        @Override
         public Flux<Lawyer> getLawyersBySearch(String search) {
             Query query = new Query();
             Criteria criteria = new Criteria();
