@@ -7,8 +7,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.admin.domain.model.Admin;
 import site.lawmate.admin.domain.dto.AdminDto;
+import site.lawmate.admin.domain.vo.ExceptionStatus;
+import site.lawmate.admin.handler.LoginException;
 import site.lawmate.admin.repository.AdminRepository;
 import site.lawmate.admin.service.AdminService;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,15 +21,18 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
 
     @Override
-    public Mono<Admin> save(AdminDto adminDto) {
-
-        return adminRepository.save(Admin.builder()
-                .email(adminDto.getEmail())
-                .name(adminDto.getName())
-                .password(adminDto.getPassword())
-                .role(adminDto.getRole())
-                .enabled(adminDto.getEnabled())
-                .build());
+    public Mono<Object> save(AdminDto adminDto) {
+            return adminRepository.findByEmail(adminDto.getEmail())
+                .flatMap(existingAdmin -> Mono.error(new LoginException(ExceptionStatus.ALREADY_EXISTS, "이미 존재하는 이메일입니다.")))
+                .switchIfEmpty(Mono.defer(() -> {
+                    Admin admin = Admin.builder()
+                            .email(adminDto.getEmail())
+                            .password(adminDto.getPassword())
+                            .name(adminDto.getName())
+                            .role(adminDto.getRole())
+                            .build();
+                    return adminRepository.save(admin);
+                }));
     }
 
 

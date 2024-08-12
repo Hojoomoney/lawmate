@@ -6,7 +6,7 @@ import site.lawmate.admin.domain.model.Admin;
 import site.lawmate.admin.domain.dto.AdminDto;
 
 public interface AdminService {
-    Mono<Admin> save(AdminDto adminDto);
+    Mono<Object> save(AdminDto adminDto);
     Mono<Admin> findById(String id);
     Flux<Admin> findAll();
     Mono<Admin> update(String id,AdminDto adminDto);
