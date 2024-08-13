@@ -56,7 +56,6 @@ public class AuthHandler {
                                                 .maxAge(jwtTokenProvider.getAccessTokenExpired())
                                                 .path("/")
                                                 .sameSite("None")
-                                                .domain(".lawmate.site")
                                                 .secure(true)
                                                 .httpOnly(true)
                                                 .build()
@@ -120,8 +119,7 @@ public class AuthHandler {
         return ResponseCookie.from(name, value)
                 .maxAge(maxAge)
                 .path("/")
-                .domain(".lawmate.site")
-                .secure(true)
+                .sameSite("Lax")
                 .httpOnly(true)
                 .build();
     }

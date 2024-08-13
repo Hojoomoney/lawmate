@@ -34,8 +34,8 @@ public class CustomAuthenticationSuccessHandler implements ServerAuthenticationS
         webFilterExchange.getExchange().getResponse().setStatusCode(HttpStatus.FOUND);
         authentication.getAuthorities().stream().filter(i -> i.getAuthority().equals("ROLE_USER")).findAny()
                 .ifPresentOrElse(
-                        i -> webFilterExchange.getExchange().getResponse().getHeaders().setLocation(URI.create("https://localhost:3000")),
-                        () -> webFilterExchange.getExchange().getResponse().getHeaders().setLocation(URI.create("https://localhost:3000/detail"))
+                        i -> webFilterExchange.getExchange().getResponse().getHeaders().setLocation(URI.create("http://localhost:3000")),
+                        () -> webFilterExchange.getExchange().getResponse().getHeaders().setLocation(URI.create("http://localhost:3000/detail"))
                 );
         webFilterExchange.getExchange().getResponse().getHeaders().add("Content-Type", "application/json");
         return webFilterExchange.getExchange().getResponse()
@@ -50,9 +50,7 @@ public class CustomAuthenticationSuccessHandler implements ServerAuthenticationS
                                                         ResponseCookie.from("accessToken", accessToken)
                                                                 .path("/")
                                                                 .maxAge(jwtTokenProvider.getAccessTokenExpired())
-                                                                .domain(".lawmate.site")
-                                                                .secure(true)
-                                                                .httpOnly(true)
+                                                                // .httpOnly(true)
                                                                 .build()
                                                 )
                                 )
@@ -66,9 +64,7 @@ public class CustomAuthenticationSuccessHandler implements ServerAuthenticationS
                                                         ResponseCookie.from("refreshToken", refreshToken)
                                                                 .path("/")
                                                                 .maxAge(jwtTokenProvider.getRefreshTokenExpired())
-                                                                .domain(".lawmate.site")
-                                                                .secure(true)
-                                                                .httpOnly(true)
+                                                                // .httpOnly(true)
                                                                 .build()
                                                 )
                                 )

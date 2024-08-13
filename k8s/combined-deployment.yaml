@@ -103,17 +103,17 @@ spec:
         - name: gateway
           image: hojookim/lawmate-gateway:latest
           ports:
-            - containerPort: 443
+            - containerPort: 80
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 443
+              port: 80
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 443
+              port: 80
             initialDelaySeconds: 30
             periodSeconds: 10
 ---
