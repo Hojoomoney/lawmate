@@ -18,4 +18,5 @@ public interface PostService {
     Mono<Void> deleteFileByUrl(String url);
     Mono<byte[]> downloadFile(String url);
     Flux<Post> getAllPosts(PageRequest pageRequest);
+    Mono<Post> getPostById(String postId);
 }

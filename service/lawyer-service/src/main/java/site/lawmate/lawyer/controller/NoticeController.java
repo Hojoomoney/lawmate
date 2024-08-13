@@ -5,11 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import site.lawmate.lawyer.domain.model.Notice;
 import site.lawmate.lawyer.service.impl.NoticeServiceImpl;
 
 @Slf4j

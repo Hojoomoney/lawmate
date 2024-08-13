@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.component.Messenger;
-import site.lawmate.lawyer.domain.model.LawyerDetail;
 import site.lawmate.lawyer.domain.model.Lawyer;
+import site.lawmate.lawyer.domain.model.LawyerDetail;
 import site.lawmate.lawyer.service.impl.LawyerServiceImpl;
 
 import java.util.List;

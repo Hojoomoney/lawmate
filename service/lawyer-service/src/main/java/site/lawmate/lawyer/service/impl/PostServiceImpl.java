@@ -11,7 +11,6 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import site.lawmate.lawyer.domain.model.File;
 import site.lawmate.lawyer.domain.model.Lawyer;
 import site.lawmate.lawyer.domain.model.Post;
@@ -132,5 +131,10 @@ public class PostServiceImpl implements PostService {
             com.amazonaws.services.s3.model.S3Object s3Object = s3Client.getObject(bucketName, url.substring(url.lastIndexOf("/") + 1));
             return s3Object.getObjectContent().readAllBytes();
         });
+    }
+
+    @Override
+    public Mono<Post> getPostById(String postId) {
+        return postRepository.findById(postId);
     }
 }

@@ -16,7 +16,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/save")
-    public ResponseEntity<Mono<Admin>> save(@RequestBody AdminDto adminDto) {
+    public ResponseEntity<Mono<Object>> save(@RequestBody AdminDto adminDto) {
         log.info("adminDto: {}", adminDto.getEmail());
         return ResponseEntity.ok(adminService.save(adminDto));
     }

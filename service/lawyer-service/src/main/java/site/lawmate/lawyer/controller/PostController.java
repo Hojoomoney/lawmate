@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.domain.model.Lawyer;
@@ -83,5 +82,10 @@ public class PostController {
                             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + url.substring(url.lastIndexOf("/") + 1))
                             .body(resource);
                 });
+    }
+
+    @GetMapping("/post/{postId}")
+    public ResponseEntity<Mono<Post>> getPostById(@PathVariable("postId") String postId) {
+        return ResponseEntity.ok(service.getPostById(postId));
     }
 }

@@ -10,6 +10,7 @@ public enum ExceptionStatus {
 
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Invalid Password", 402),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Unauthorized", 403),
+    ALREADY_EXISTS(HttpStatus.UNAUTHORIZED, "Already Exists", 402),
     FORBIDDEN(HttpStatus.FORBIDDEN, "Forbidden", 404),
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "Not Found", 405),

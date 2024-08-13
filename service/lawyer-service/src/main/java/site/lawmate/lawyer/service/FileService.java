@@ -5,10 +5,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.domain.model.File;
 
+import java.util.List;
+
 public interface FileService {
-
     Flux<File> saveFiles(String lawyerId, Flux<FilePart> files);
-
     Mono<File> saveFileMetadata(String lawyerId, FilePart filePart, String url);
     Mono<File> getFileById(String id);
     Mono<Void> deleteFileById(String id);
@@ -18,6 +18,7 @@ public interface FileService {
     Flux<File> getAllFiles();
     Flux<File> getFilesByLawyerId(String lawyerId);
     String getKeyFromUrl(String url);
+    Flux<File> getFilesByIds(List<String> ids);
 
 
 }

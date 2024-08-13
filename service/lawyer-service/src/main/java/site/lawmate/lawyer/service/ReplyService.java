@@ -8,10 +8,11 @@ import site.lawmate.lawyer.domain.model.Reply;
 public interface ReplyService {
     Mono<Lawyer> replyToLawyer(String id, String articleId, Reply reply);
     Mono<Reply> updateReply(String id, Reply replyModel);
-    Mono<Reply> getReplyByArticleId(String articleId);
+    Flux<Reply> getRepliesByArticleId(String articleId);
     Flux<Reply> getAllReplies();
     Mono<Void> deleteReply(String id);
     Flux<Reply> getRepliesByLawyerId(String lawyerId);
     Mono<Void> deleteAllReplies();
+    Mono<Reply> getReplyById(String id);
 
 }
