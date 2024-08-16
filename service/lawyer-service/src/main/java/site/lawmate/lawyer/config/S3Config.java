@@ -5,6 +5,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AccessControlList;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.GroupGrantee;
+import com.amazonaws.services.s3.model.Permission;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

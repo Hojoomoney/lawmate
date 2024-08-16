@@ -14,7 +14,7 @@ import java.time.Duration;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatController {

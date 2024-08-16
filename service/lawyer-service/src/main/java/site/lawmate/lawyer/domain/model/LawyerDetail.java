@@ -31,6 +31,7 @@ public class LawyerDetail implements Persistable<String> {
     String university; // 대학 ex) 서울대학교, 부산대학교 ...
     String major; // 학과 ex) 법학과, 경제학과 ...
     String time; // 모든 데이터 09:00 ~ 18:00로 추가
+    String photo; // 사진 URL
     @Builder.Default
     Boolean premium = false;
 

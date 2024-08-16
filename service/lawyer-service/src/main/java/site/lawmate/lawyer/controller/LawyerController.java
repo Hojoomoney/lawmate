@@ -1,19 +1,24 @@
 package site.lawmate.lawyer.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.component.Messenger;
-import site.lawmate.lawyer.domain.model.Lawyer;
 import site.lawmate.lawyer.domain.model.LawyerDetail;
+import site.lawmate.lawyer.domain.model.Lawyer;
 import site.lawmate.lawyer.service.impl.LawyerServiceImpl;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -63,19 +68,31 @@ public class LawyerController {
         return ResponseEntity.ok(lawyerService.addLawyer(lawyer));
     }
 
-    @PostMapping("/saveDetail/{id}")
-    public ResponseEntity<Mono<Lawyer>> saveLawyerDetail(@PathVariable("id") String lawyerId, @RequestBody LawyerDetail lawyer) {
-        return ResponseEntity.ok(lawyerService.addLawyerDetailToLawyer(lawyerId, lawyer));
-    }
     @PatchMapping("/{id}")
     public ResponseEntity<Mono<Lawyer>> updateLawyer(@PathVariable("id") String id, @RequestBody Lawyer lawyer) {
         return ResponseEntity.ok(lawyerService.updateLawyer(id, lawyer));
     }
 
-    @PatchMapping("/detail/{id}")
-    public ResponseEntity<Mono<Lawyer>> updateLawyerDetail(@PathVariable("id") String id, @RequestBody LawyerDetail lawyer) {
-        return ResponseEntity.ok(lawyerService.updateLawyerDetail(id, lawyer));
+
+
+    // 변호사 상세 정보 저장
+    @PostMapping(value = "/saveDetail/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Mono<Lawyer>> saveLawyerDetail(@PathVariable("id") String lawyerId,
+                                                         @RequestPart("lawyerDetail") String lawyerDetailJson,
+                                                         @RequestPart("photoFile") FilePart photoFile) throws IOException {
+        LawyerDetail lawyerDetail = new ObjectMapper().readValue(lawyerDetailJson, LawyerDetail.class);
+        return ResponseEntity.ok(lawyerService.addLawyerDetailToLawyer(lawyerId, lawyerDetail, photoFile));
     }
+
+    // 변호사 상세 정보 업데이트
+    @PatchMapping(value = "/detail/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Mono<Lawyer>> updateLawyerDetail(@PathVariable("id") String id,
+                                                           @RequestPart("lawyerDetail") String lawyerDetailJson,
+                                                           @RequestPart("photoFile") FilePart photoFile) throws IOException {
+        LawyerDetail lawyerDetail = new ObjectMapper().readValue(lawyerDetailJson, LawyerDetail.class);
+        return ResponseEntity.ok(lawyerService.updateLawyerDetail(id, lawyerDetail, photoFile));
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Mono<Void>> deleteLawyer(@PathVariable("id") String id) {

@@ -1,20 +1,23 @@
     package site.lawmate.lawyer.service.impl;
-
+    
     import lombok.RequiredArgsConstructor;
     import lombok.extern.slf4j.Slf4j;
     import org.springframework.data.domain.Sort;
     import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
     import org.springframework.data.mongodb.core.query.Criteria;
     import org.springframework.data.mongodb.core.query.Query;
+    import org.springframework.http.codec.multipart.FilePart;
     import org.springframework.stereotype.Service;
     import reactor.core.publisher.Flux;
     import reactor.core.publisher.Mono;
-    import site.lawmate.lawyer.domain.model.Lawyer;
+    import site.lawmate.lawyer.component.Messenger;
+    import site.lawmate.lawyer.domain.dto.LawyerDto;
     import site.lawmate.lawyer.domain.model.LawyerDetail;
+    import site.lawmate.lawyer.domain.model.Lawyer;
     import site.lawmate.lawyer.repository.LawyerDetailRepository;
     import site.lawmate.lawyer.repository.LawyerRepository;
     import site.lawmate.lawyer.service.LawyerService;
-
+    
     import java.util.List;
     import java.util.UUID;
     
@@ -27,6 +30,7 @@
         private final LawyerDetailRepository lawyerDetailRepository;
         private final ReactiveMongoTemplate reactiveMongoTemplate;
         private final EmailServiceImpl emailService;
+        private final S3ServiceImpl s3Service;
     
         @Override
         public Flux<Lawyer> getAllLawyers() {
@@ -44,16 +48,18 @@
     
     
         // 변호사 추가 정보
-        @Override
-        public Mono<Lawyer> addLawyerDetailToLawyer(String id, LawyerDetail detail) {
-            return lawyerRepository.findById(id)
-                    .flatMap(lawyer -> {
-                        return lawyerDetailRepository.save(detail)
-                                .flatMap(savedDetail -> {
-                                    lawyer.setDetail(savedDetail);
-                                    return lawyerRepository.save(lawyer);
-                                });
-                    });
+        // 변호사 상세 정보를 추가하는 메서드
+        public Mono<Lawyer> addLawyerDetailToLawyer(String id, LawyerDetail detail, FilePart photoFile) {
+            return s3Service.uploadFile(photoFile)
+                    .flatMap(photoUrl -> {
+                        detail.setPhoto(photoUrl); // 업로드된 사진 URL을 설정
+                        return lawyerDetailRepository.save(detail);
+                    })
+                    .flatMap(savedDetail -> lawyerRepository.findById(id)
+                            .flatMap(lawyer -> {
+                                lawyer.setDetail(savedDetail);
+                                return lawyerRepository.save(lawyer);
+                            }));
         }
         @Override
         public Mono<LawyerDetail> getLawyerDetailById(String id) {
@@ -93,17 +99,19 @@
         public Mono<Void> deleteLawyer(String id) {
             return lawyerRepository.deleteById(id);
         }
-    
+
         @Override
-        public Mono<Lawyer> updateLawyerDetail(String id, LawyerDetail detail) {
-            return lawyerRepository.findById(id)
-                    .flatMap(lawyer -> {
-                        return lawyerDetailRepository.save(detail)
-                                .flatMap(savedDetail -> {
-                                    lawyer.setDetail(savedDetail);
-                                    return lawyerRepository.save(lawyer);
-                                });
-                    });
+        public Mono<Lawyer> updateLawyerDetail(String id, LawyerDetail detail, FilePart photoFile) {
+            return s3Service.uploadFile(photoFile)
+                    .flatMap(photoUrl -> {
+                        detail.setPhoto(photoUrl); // 업로드된 사진 URL을 설정
+                        return lawyerDetailRepository.save(detail);
+                    })
+                    .flatMap(savedDetail -> lawyerRepository.findById(id)
+                            .flatMap(lawyer -> {
+                                lawyer.setDetail(savedDetail);
+                                return lawyerRepository.save(lawyer);
+                            }));
         }
         @Override
         public Flux<Lawyer> getLawyersByLaw(List<String> law) {

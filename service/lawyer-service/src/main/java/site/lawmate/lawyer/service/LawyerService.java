@@ -1,5 +1,6 @@
 package site.lawmate.lawyer.service;
 
+import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.lawyer.domain.model.Lawyer;
@@ -11,12 +12,12 @@ public interface LawyerService {
     Flux<Lawyer> getAllLawyers();
     Mono<Long> getLawyersCount();
     Mono<Lawyer> getLawyerById(String id);
-    Mono<Lawyer> addLawyerDetailToLawyer(String id, LawyerDetail detail);
+    Mono<Lawyer> addLawyerDetailToLawyer(String id, LawyerDetail detail, FilePart photoFile);
     Mono<LawyerDetail> getLawyerDetailById(String id);
     Mono<Lawyer> addLawyer(Lawyer lawyer);
     Mono<Lawyer> updateLawyer(String id, Lawyer lawyer);
     Mono<Void> deleteLawyer(String id);
-    Mono<Lawyer> updateLawyerDetail(String id, LawyerDetail detail);
+    Mono<Lawyer> updateLawyerDetail(String id, LawyerDetail detail, FilePart photoFile);
     Flux<Lawyer> getLawyersByLaw(List<String> law);
     Flux<Lawyer> getLawyersBySearch(String search);
     Mono<Void> resetPassword(String lawyerNo);
