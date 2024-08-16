@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.lawmate.user.component.Messenger;
@@ -13,10 +14,14 @@ import site.lawmate.user.domain.dto.LawPaymentDto;
 import site.lawmate.user.domain.dto.UserPaymentDto;
 import site.lawmate.user.domain.model.LawPayment;
 import site.lawmate.user.domain.model.PaymentCallbackRequest;
+import site.lawmate.user.domain.model.Premium;
 import site.lawmate.user.domain.vo.PaymentStatus;
 import site.lawmate.user.repository.LawPaymentRepository;
+import site.lawmate.user.repository.PremiumRepository;
 import site.lawmate.user.service.LawPaymentService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,12 +31,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LawPaymentServiceImpl implements LawPaymentService {
     private final LawPaymentRepository payRepository;
+    private final PremiumRepository premiumRepository;
 
     @Transactional
     @Override
     public Messenger save(LawPaymentDto dto) {
         log.info("premium 결제 service 진입 성공: {}", dto);
+        Premium premium = premiumRepository.findById(dto.getPremium().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid premium ID: " + dto.getPremium().getId()));
+
         LawPayment payment = dtoToEntity(dto);
+        payment.setStartDate(LocalDateTime.now());
+        payment.setExpireDate(calculateExpireDate(premium.getPlan(), payment.getStartDate()));
+
         LawPayment savedPayment = payRepository.save(payment);
         boolean exists = payRepository.existsById(savedPayment.getId());
         if (exists) {
@@ -41,6 +53,24 @@ public class LawPaymentServiceImpl implements LawPaymentService {
         return Messenger.builder()
                 .message(exists ? "SUCCESS" : "FAILURE")
                 .build();
+    }
+
+
+    private LocalDateTime calculateExpireDate(String plan, LocalDateTime startDate) {
+        return switch (plan.toLowerCase()) {
+            case "monthly" -> startDate.plusMonths(1);
+            case "quarterly" -> startDate.plusMonths(3);
+            case "annual" -> startDate.plusYears(1);
+            default -> throw new IllegalArgumentException("Invalid plan: " + plan);
+        };
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    public void checkAndExpirePremiums() {
+        List<LawPayment> expiredPremiums = payRepository.findByExpireDateBeforeAndIsExpiredFalse(LocalDate.now());
+        for (LawPayment lawPayment : expiredPremiums) {
+            payRepository.markAsExpired(lawPayment.getId());
+        }
     }
 
     @Transactional

@@ -26,32 +26,12 @@ public class PremiumServiceImpl implements PremiumService {
     @Override
     public Messenger save(PremiumDto dto) {
         Premium premium = dtoToEntity(dto);
-        premium.setStartDate(LocalDateTime.now());
-        premium.setExpireDate(calculateExpireDate(premium.getPlan(), premium.getStartDate()));
 
         Premium savedPremium = premiumRepository.save(premium);
 
         return Messenger.builder()
                 .message(premiumRepository.existsById(savedPremium.getId()) ? "SUCCESS" : "FAILURE")
                 .build();
-    }
-
-    private LocalDateTime calculateExpireDate(String plan, LocalDateTime startDate) {
-        return switch (plan.toLowerCase()) {
-            case "monthly" -> startDate.plusMonths(1);
-            case "semi-annual" -> startDate.plusMonths(6);
-            case "annual" -> startDate.plusYears(1);
-            default -> throw new IllegalArgumentException("Invalid plan: " + plan);
-        };
-    }
-
-
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
-    public void checkAndExpirePremiums() {
-        List<Premium> expiredPremiums = premiumRepository.findByExpireDateBeforeAndIsExpiredFalse(LocalDate.now());
-        for (Premium premium : expiredPremiums) {
-            premiumRepository.markAsExpired(premium.getId());
-        }
     }
 
     @Override
@@ -68,9 +48,7 @@ public class PremiumServiceImpl implements PremiumService {
         Optional<Premium> optionalPremium = premiumRepository.findById(premiumDto.getId());
         if (optionalPremium.isPresent()) {
             Premium premium = optionalPremium.get();
-            premium.setPlan(premiumDto.getPlan());
             premium.setPrice(premiumDto.getPrice());
-            premium.setLawyer(premiumDto.getLawyer());
             premiumRepository.save(premium);
             return Messenger.builder().message("SUCCESS").build();
         }
@@ -104,8 +82,4 @@ public class PremiumServiceImpl implements PremiumService {
         return premiumRepository.existsById(id);
     }
 
-    @Override
-    public Optional<PremiumDto> findByLawyer(String lawyer) {
-        return premiumRepository.findByLawyer(lawyer)
-                .map(this::entityToDto);    }
 }

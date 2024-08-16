@@ -2,10 +2,7 @@ package site.lawmate.user.domain.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 import site.lawmate.user.domain.vo.Registration;
 import site.lawmate.user.domain.vo.Role;

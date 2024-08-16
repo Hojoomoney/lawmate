@@ -20,7 +20,4 @@ public class PremiumDto {
     private Long id;
     private String plan;
     private String price;
-    private LocalDateTime startDate;
-    private LocalDateTime expireDate;
-    private String lawyer;
 }

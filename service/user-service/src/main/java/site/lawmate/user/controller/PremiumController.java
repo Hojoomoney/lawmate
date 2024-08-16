@@ -48,12 +48,6 @@ public class PremiumController {
         return ResponseEntity.ok(premiumService.findById(id));
     }
 
-    @GetMapping(path = "/findLawyer")
-    public ResponseEntity<Optional<PremiumDto>> findByLawyer(@RequestParam("lawyer") String lawyer) {
-        log.info("premium 변호사 결제 정보 조회 id: {} ", lawyer);
-        return ResponseEntity.ok(premiumService.findByLawyer(lawyer));
-    }
-
     @GetMapping("/all")
     public ResponseEntity<List<PremiumDto>> findAll(
             @RequestParam(value = "page", defaultValue = "0") int page,

@@ -13,15 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface PremiumRepository extends JpaRepository<Premium, Long> {
-    List<Premium> findByExpireDateBeforeAndIsExpiredFalse(LocalDate date);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE premiums p SET p.isExpired = true WHERE p.id = :id")
-    void markAsExpired(Long id);
 
     List<Premium> findAllByOrderByIdAsc();
-
-    Optional<Premium> findByLawyer(String lawyer);
 
 }

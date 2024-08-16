@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 import site.lawmate.user.domain.vo.PaymentStatus;
 
+import java.time.LocalDateTime;
+
 @Entity(name = "law_payments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -19,6 +21,12 @@ public class LawPayment {
     private Long id;
     private String lawyer;
     private String impUid;
+    private LocalDateTime startDate;
+    private LocalDateTime expireDate;
+
+    //만료 여부 확인
+    @Builder.Default
+    private boolean isExpired = false;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;

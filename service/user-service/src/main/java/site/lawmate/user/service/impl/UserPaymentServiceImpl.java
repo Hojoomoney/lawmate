@@ -7,6 +7,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,10 +188,9 @@ public class UserPaymentServiceImpl implements UserPaymentService {
     public Optional<UserPaymentDto> findById(Long id) {
         return payRepository.findById(id)
                 .map(pay -> {
-                    pay.getBuyer().getQuestions().size();
-                    pay.getBuyer().getIssues().size();
-                    pay.getProduct().getPayments().size();
-
+                    Hibernate.initialize(pay.getBuyer().getQuestions());
+                    Hibernate.initialize(pay.getBuyer().getIssues());
+                    Hibernate.initialize(pay.getProduct().getPayments());
                     return entityToDto(pay);
                 });
     }
@@ -200,10 +200,9 @@ public class UserPaymentServiceImpl implements UserPaymentService {
     public Optional<UserPaymentDto> findByLawyer(String lawyer) {
         return payRepository.findByLawyer(lawyer)
                 .map(pay -> {
-                    pay.getBuyer().getQuestions().size();
-                    pay.getBuyer().getIssues().size();
-                    pay.getProduct().getPayments().size();
-
+                    Hibernate.initialize(pay.getBuyer().getQuestions());
+                    Hibernate.initialize(pay.getBuyer().getIssues());
+                    Hibernate.initialize(pay.getProduct().getPayments());
                     return entityToDto(pay);
                 });
     }
@@ -215,9 +214,9 @@ public class UserPaymentServiceImpl implements UserPaymentService {
 
         return payments.stream()
                 .map(pay -> {
-                    pay.getBuyer().getQuestions().size();
-                    pay.getBuyer().getIssues().size();
-                    pay.getProduct().getPayments().size();
+                    Hibernate.initialize(pay.getBuyer().getQuestions());
+                    Hibernate.initialize(pay.getBuyer().getIssues());
+                    Hibernate.initialize(pay.getProduct().getPayments());
                     return entityToDto(pay);
                 })
                 .toList();
